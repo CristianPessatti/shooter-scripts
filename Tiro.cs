@@ -10,20 +10,23 @@ public class Tiro : MonoBehaviour {
 	// Referência ao efeito sonoro de tiro
 	public AudioClip shootSFX;
 	
+	//Variável pra armazenar a posição da camera, eu precisei criar essa variável porque o tiro vai sair da arma
+	//porém ele não pode ir em direção ao z da arma, se não o tiro não vai em direção da mira
+	//pro tiro ir em direção da mira ele precisa sair da arma e ir em direção ao z da camera
 	public Transform gunCamera;
 
+	//tempo que vai ter q esperar pra poder dar o próximo tiro (meio segundo)
 	public float delayAfterShot = 0.5f;
+	//variável que armazena o tempo que precisa ter passado pra poder dar o próximo tiro
 	private float nextShot = 0.0f;
-
-	// IEnumerator coUpdate() {
-	// 	yield return new WaitForSeconds(2);
-	// }
 
 	// Update é chamado uma vez por frame
 	void Update () {
 		// Detecta se o botão de tiro foi pressionado
+		// e tambem se ja passou o tempo necessário para atirar de novo
 		if (Input.GetButtonDown("Fire1") && Time.time > nextShot)
 		{	
+			//aumenta o tempo necessário para o próximo tiro de acordo com o tempo entre cada tiro q eu defini
 			nextShot = Time.time + delayAfterShot;
 			// se o projetil foi definido
 			if (projetil)
@@ -38,6 +41,7 @@ public class Tiro : MonoBehaviour {
 				}
 
 				// Aplique força ao Rigidbody do newProjectile
+				//Aqui eu adicionei a posição z da camera ao invés da posição z da arma
 				newProjectile.GetComponent<Rigidbody>().AddForce(gunCamera.transform.forward * forca, ForceMode.VelocityChange);
 				
 				// toque o efeito sonoro, se houver
