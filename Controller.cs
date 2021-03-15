@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Controller : MonoBehaviour {
 
@@ -12,6 +13,8 @@ public class Controller : MonoBehaviour {
     //altura que o pulo vai ter
     public float jump = 3f;
 
+    public string levelToLoadWhenKilled;
+
     private CharacterController myController;
 
     //aqui é onde eu vou colocar o objeto que fica na parte de baixo do personagem, isso eu faço la no unity arrastando pra ca.
@@ -20,8 +23,11 @@ public class Controller : MonoBehaviour {
     public float groundCheckRadius = 0.4f;
     //aqui eu vou definir qual tag que ele vai procurar, no caso la no unity eu defino como ground (chão)
     public LayerMask groundMask;
+     public LayerMask killMask;
     //essa variável é de verdadeiro ou falso, vai ser verdadeiro quando estiver no chão, falso quando estiver no ar
     private bool isGrounded;
+
+    private bool hitFloor;
 
     //essa variável que vai conter a velocidade da queda
     private Vector3 fall;
@@ -33,6 +39,12 @@ public class Controller : MonoBehaviour {
     void Update() {
         //checando se está no chão ou não
         isGrounded = Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
+
+        hitFloor = Physics.CheckSphere(groundCheck.position, groundCheckRadius, killMask);
+
+        if(hitFloor) {
+            SceneManager.LoadScene(levelToLoadWhenKilled);
+        }
 
         //resetando a velocidade de queda quando estiver no chão
         //eu preciso fazer isso porque a velocidade da queda fica sempre aumentando de acordo com a aceleração da gravidade
